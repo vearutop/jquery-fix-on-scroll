@@ -3,7 +3,8 @@
         var b = $(this),
 
             o = $.extend({
-                box: {top: 0, height: 0},
+                boxTop: 0,
+                boxHeight: 0,
                 blockHeight: b.height(),
                 viewPortHeight: $(window).height()
             }, options),
@@ -63,13 +64,17 @@
             }
         }
 
-        function scrollEvent() {
-            var box = typeof o.box == 'function' ? o.box() : o.box,
-                blockHeight = typeof o.blockHeight == 'function' ? o.blockHeight() : o.blockHeight,
-                viewPortHeight = typeof o.viewPortHeight == 'function' ? o.viewPortHeight() : o.viewPortHeight,
-                scrollTop = ($("html").scrollTop() > 0) ? $("html").scrollTop() : $("body").scrollTop(),
-                viewPort = {top: scrollTop, height: viewPortHeight, bottom: scrollTop + viewPortHeight};
+        function option(key) {
+            return typeof o[key] == 'function' ? o[key]() : o[key];
+        }
 
+        function scrollEvent() {
+            var blockHeight = option('blockHeight'),
+                scrollTop = ($("html").scrollTop() > 0) ? $("html").scrollTop() : $("body").scrollTop(),
+                viewPort = {top: scrollTop, height: option('viewPortHeight')},
+                box = {top: option('boxTop'), height: option('boxHeight')};
+
+            viewPort.bottom = viewPort.top + viewPort.height;
             box.bottom = box.top + box.height;
             box.bottomPadded = box.bottom - blockHeight;
             box.topPadded = box.top + blockHeight;

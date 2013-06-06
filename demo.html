@@ -132,23 +132,25 @@
 
 
 
-<script src="jquery.fixonscroll.min.js" type="text/javascript"></script>
+<script src="jquery.fixonscroll.js" type="text/javascript"></script>
 <script type="text/javascript">
-    $('#menu').fixOnScroll({
-        box: function () {
-            var c = $('#content');
-            return {
-                top: c.position().top,
-                height: c.height()
+
+    (function(){
+        var c = $('#content');
+        $('#menu').fixOnScroll({
+            boxTop: function () {
+                return c.position().top;
+            },
+            boxHeight: function () {
+                return c.height();
             }
-        }
-    });
+
+        });
+    })();
 
     $('#menu2').fixOnScroll({
-        box: {
-            top: $('#content').position().top,
-            height: $('#content').height()
-        }
+        boxTop: $('#content').position().top,
+        boxHeight: $('#content').height()
     });
 
 
