@@ -79,6 +79,10 @@
             box.bottomPadded = box.bottom - blockHeight;
             box.topPadded = box.top + blockHeight;
 
+            if (box.height <= blockHeight) {
+                return;
+            }
+
             //console.log(box, box.bottomPadded, box.topPadded, viewPort, status);
 
             if (viewPort.height > b.height()) {

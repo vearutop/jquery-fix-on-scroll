@@ -132,12 +132,12 @@
 
 
 
-<script src="jquery.fixonscroll.js" type="text/javascript"></script>
+<script src="jquery.fixonscroll.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 
     (function(){
         var c = $('#content');
-        $('#menu').fixOnScroll({
+        $('#menu, #menu2').fixOnScroll({
             boxTop: function () {
                 return c.position().top;
             },
@@ -148,10 +148,12 @@
         });
     })();
 
+    /*
     $('#menu2').fixOnScroll({
         boxTop: $('#content').position().top,
         boxHeight: $('#content').height()
     });
+    */
 
 
 </script>
