@@ -25,7 +25,7 @@
     </div>
 
     <div style="float:left; width:300px;height:300px;background: yellowgreen;position: relative">
-        <div id="menu2" style="width:200px;background: greenyellow">
+        <div id="menu2" style="width:100px;background: greenyellow">
             START
             Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam
             eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam
@@ -127,15 +127,17 @@
 <script type="text/javascript">
 
     (function(){
-        var c = $('#content');
-        $('#menu, #menu2').fixOnScroll({
-            boxTop: function () {
-                return c.position().top;
-            },
-            boxHeight: function () {
-                return c.height();
-            }
-        });
+        var c = $('#content'),
+                o = {
+                    boxTop: function () {
+                        return c.position().top;
+                    },
+                    boxHeight: function () {
+                        return c.height();
+                    }
+                };
+        $('#menu').fixOnScroll(o);
+        $('#menu2').fixOnScroll(o);
 
     })();
 
