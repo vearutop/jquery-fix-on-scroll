@@ -1,15 +1,20 @@
 ;(function($) {
     $.fn.fixOnScroll = function(options) {
         var b = $(this),
+            o = {},
 
-            o = $.extend({
-                boxTop: 0,
-                boxHeight: 0,
-                blockHeight: b.height(),
-                viewPortHeight: $(window).height()
-            }, options),
+            sBoxTop = 'boxTop',
+            sBoxHeight = 'boxHeight',
+            sBlockHeight = 'blockHeight',
+            sViewPortHeight = 'viewPortHeight',
 
             status = 'top'; // bottom, f-top, f-bottom
+
+        o[sBoxTop] = options[sBoxTop] || b.offset().top;
+        o[sBoxHeight] = options[sBoxHeight] || b.parent().height();
+        o[sBlockHeight] = options[sBlockHeight] || b.height() + parseInt(b.css('marginTop')) + parseInt(b.css('marginBottom'));
+        o[sViewPortHeight] = options[sViewPortHeight] || function(){return $(window).height();};
+
 
 
         function setFixedShort() {
@@ -64,35 +69,34 @@
             }
         }
 
-        function option(key) {
-            return typeof o[key] == 'function' ? o[key]() : o[key];
+        function option(key, static) {
+            return !static && typeof o[key] == 'function' ? o[key]() : o[key];
         }
 
         function scrollEvent() {
-            var blockHeight = option('blockHeight'),
-                scrollTop = ($("html").scrollTop() > 0) ? $("html").scrollTop() : $("body").scrollTop(),
-                viewPort = {top: scrollTop, height: option('viewPortHeight')},
-                box = {top: option('boxTop'), height: option('boxHeight')};
+            var oBlockHeight = option(sBlockHeight),
+                oViewPortHeight = option(sViewPortHeight),
+                oBoxTop = option(sBoxTop),
+                oBoxHeight = option(sBoxHeight),
+                viewPortTop = ($("html").scrollTop() > 0) ? $("html").scrollTop() : $("body").scrollTop(),
+                viewPortBottom = viewPortTop + oViewPortHeight,
+                boxBottom = oBoxTop + oBoxHeight,
+                boxBottomPadded = boxBottom - oBlockHeight,
+                boxTopPadded = oBoxTop + oBlockHeight;
 
-            viewPort.bottom = viewPort.top + viewPort.height;
-            box.bottom = box.top + box.height;
-            box.bottomPadded = box.bottom - blockHeight;
-            box.topPadded = box.top + blockHeight;
 
-            if (box.height <= blockHeight) {
+            if (oBoxHeight <= oBlockHeight) {
                 return;
             }
 
-            //console.log(box, box.bottomPadded, box.topPadded, viewPort, status);
-
-            if (viewPort.height > b.height()) {
-                if (viewPort.top < box.top) {
+            if (oViewPortHeight > b.height()) {
+                if (viewPortTop < oBoxTop) {
                     setTop();
                     return;
                 }
 
-                if (viewPort.top > box.bottomPadded) {
-                    setBottom(box.height - blockHeight);
+                if (viewPortTop > boxBottomPadded) {
+                    setBottom(oBoxHeight - oBlockHeight);
                     return;
                 }
                 setFixedShort();
@@ -100,19 +104,22 @@
 
 
             else {
-                if (viewPort.bottom < box.topPadded) {
+                if (viewPortBottom < boxTopPadded) {
                     setTop();
                     return;
                 }
-                if (viewPort.bottom > box.bottom) {
-                    setBottom(box.height - blockHeight);
+                if (viewPortBottom > boxBottom) {
+                    setBottom(oBoxHeight - oBlockHeight);
                     return;
                 }
                 setFixedLong();
             }
         }
 
-        $(window).scroll(scrollEvent).resize(scrollEvent);
+        if (option(sBoxHeight) > option(sBlockHeight)) {
+            $(window).scroll(scrollEvent).resize(scrollEvent);
+        }
+
         return this;
     };
 }(jQuery));
