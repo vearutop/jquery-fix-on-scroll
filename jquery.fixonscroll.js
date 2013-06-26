@@ -8,14 +8,21 @@
                 sBoxHeight = 'boxHeight',
                 sBlockHeight = 'blockHeight',
                 sViewPortHeight = 'viewPortHeight',
+                sFixedBottom = 'fixedBottom',
+                sFixedTop = 'fixedTop',
 
                 status = 'top'; // bottom, f-top, f-bottom
+
+            function option(key) {
+                return typeof o[key] == 'function' ? o[key]() : o[key];
+            }
 
             o[sBoxTop] = options[sBoxTop] || b.offset().top;
             o[sBoxHeight] = options[sBoxHeight] || b.parent().height();
             o[sBlockHeight] = options[sBlockHeight] || b.height() + parseInt(b.css('marginTop')) + parseInt(b.css('marginBottom'));
             o[sViewPortHeight] = options[sViewPortHeight] || function(){return $(window).height();};
-
+            o[sFixedTop] = options[sFixedTop] || b.offset().top - option(sBoxTop);
+            o[sFixedBottom] = options[sFixedBottom] || 0;
 
 
             function setFixedShort() {
@@ -27,11 +34,11 @@
                  * f-bottom -> top
                  */
                 if ('top' == status && 'f-top' != status) {
-                    b.css({position: 'fixed', top: 0, bottom: 'auto'});
+                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto'});
                     status = 'f-top';
                 }
                 else if ('bottom'== status && 'f-bottom' != status) {
-                    b.css({position: 'fixed', top: 'auto', bottom: 0});
+                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom)});
                     status = 'f-bottom';
                 }
             }
@@ -47,11 +54,11 @@
                  */
 
                 if ('top' == status && 'f-bottom' != status) {
-                    b.css({position: 'fixed', top: 'auto', bottom: 0});
+                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom)});
                     status = 'f-bottom';
                 }
                 else if ('bottom'== status && 'f-top' != status) {
-                    b.css({position: 'fixed', top: 0, bottom: 'auto'});
+                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto'});
                     status = 'f-top';
                 }
             }
@@ -70,34 +77,32 @@
                 }
             }
 
-            function option(key) {
-                return typeof o[key] == 'function' ? o[key]() : o[key];
-            }
-
             function scrollEvent() {
                 var oBlockHeight = option(sBlockHeight),
                     oViewPortHeight = option(sViewPortHeight),
                     oBoxTop = option(sBoxTop),
                     oBoxHeight = option(sBoxHeight),
+                    oFixedTop = option(sFixedTop),
+                    oFixedBottom = option(sFixedBottom),
                     viewPortTop = ($("html").scrollTop() > 0) ? $("html").scrollTop() : $("body").scrollTop(),
-                    viewPortBottom = viewPortTop + oViewPortHeight,
+                    viewPortBottom = viewPortTop + oViewPortHeight - oFixedTop - oFixedBottom,
                     boxBottom = oBoxTop + oBoxHeight,
                     boxBottomPadded = boxBottom - oBlockHeight,
                     boxTopPadded = oBoxTop + oBlockHeight;
 
 
-                if (oBoxHeight <= oBlockHeight) {
+                if (oBoxHeight <= oBlockHeight + oFixedTop + oFixedBottom) {
                     return;
                 }
 
-                if (oViewPortHeight > b.height()) {
+                if (oViewPortHeight > oBlockHeight) {
                     if (viewPortTop < oBoxTop) {
                         setTop();
                         return;
                     }
 
-                    if (viewPortTop > boxBottomPadded) {
-                        setBottom(oBoxHeight - oBlockHeight);
+                    if (viewPortTop > boxBottomPadded - oFixedTop - oFixedBottom) {
+                        setBottom(oBoxHeight - oBlockHeight - oFixedTop - oFixedBottom);
                         return;
                     }
                     setFixedShort();
@@ -109,8 +114,8 @@
                         setTop();
                         return;
                     }
-                    if (viewPortBottom > boxBottom) {
-                        setBottom(oBoxHeight - oBlockHeight);
+                    if (viewPortBottom > boxBottom - oFixedTop - oFixedBottom) {
+                        setBottom(oBoxHeight - oBlockHeight - oFixedTop - oFixedBottom);
                         return;
                     }
                     setFixedLong();
