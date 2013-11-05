@@ -1,3 +1,6 @@
+/**
+ *
+ */
 ;(function($) {
     $.fn.fixOnScroll = function(options) {
         this.each(function(){
@@ -10,6 +13,7 @@
                 sViewPortHeight = 'viewPortHeight',
                 sFixedBottom = 'fixedBottom',
                 sFixedTop = 'fixedTop',
+                sForceBind = 'forceBind',
 
                 status = 'top'; // bottom, f-top, f-bottom
 
@@ -23,6 +27,7 @@
             o[sViewPortHeight] = options[sViewPortHeight] || function(){return $(window).height();};
             o[sFixedTop] = options[sFixedTop] || b.offset().top - option(sBoxTop);
             o[sFixedBottom] = options[sFixedBottom] || 0;
+            o[sForceBind] = options[sForceBind] || 0;
 
 
             function setFixedShort() {
@@ -122,7 +127,7 @@
                 }
             }
 
-            if (option(sBoxHeight) > option(sBlockHeight)) {
+            if (option(sForceBind) || option(sBoxHeight) > option(sBlockHeight)) {
                 $(window).scroll(scrollEvent).resize(scrollEvent);
             }
 
