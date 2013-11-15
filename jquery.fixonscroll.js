@@ -1,3 +1,6 @@
+/**
+ *
+ */
 ;(function($) {
     $.fn.fixOnScroll = function(options) {
         this.each(function(){
@@ -10,6 +13,7 @@
                 sViewPortHeight = 'viewPortHeight',
                 sFixedBottom = 'fixedBottom',
                 sFixedTop = 'fixedTop',
+                sForceBind = 'forceBind',
 
                 status = 'top'; // bottom, f-top, f-bottom
 
@@ -19,10 +23,11 @@
 
             o[sBoxTop] = options[sBoxTop] || b.offset().top;
             o[sBoxHeight] = options[sBoxHeight] || b.parent().height();
-            o[sBlockHeight] = options[sBlockHeight] || b.height() + parseInt(b.css('marginTop')) + parseInt(b.css('marginBottom'));
+            o[sBlockHeight] = options[sBlockHeight] || b.height() + (parseInt(b.css('marginTop')) || 0) + (parseInt(b.css('marginBottom')) || 0);
             o[sViewPortHeight] = options[sViewPortHeight] || function(){return $(window).height();};
             o[sFixedTop] = options[sFixedTop] || b.offset().top - option(sBoxTop);
             o[sFixedBottom] = options[sFixedBottom] || 0;
+            o[sForceBind] = options[sForceBind] || 0;
 
 
             function setFixedShort() {
@@ -34,11 +39,11 @@
                  * f-bottom -> top
                  */
                 if ('top' == status && 'f-top' != status) {
-                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto'});
+                    b.css({position: 'fixed', 'margin-top': 0, top: option(sFixedTop), bottom: 'auto'});
                     status = 'f-top';
                 }
                 else if ('bottom'== status && 'f-bottom' != status) {
-                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom)});
+                    b.css({position: 'fixed', 'margin-top': 0, top: 'auto', bottom: option(sFixedBottom)});
                     status = 'f-bottom';
                 }
             }
@@ -54,25 +59,25 @@
                  */
 
                 if ('top' == status && 'f-bottom' != status) {
-                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom)});
+                    b.css({position: 'fixed', 'margin-top': 0, top: 'auto', bottom: option(sFixedBottom)});
                     status = 'f-bottom';
                 }
                 else if ('bottom'== status && 'f-top' != status) {
-                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto'});
+                    b.css({position: 'fixed', 'margin-top': 0, top: option(sFixedTop), bottom: 'auto'});
                     status = 'f-top';
                 }
             }
 
             function setTop() {
                 if ('top' != status) {
-                    b.css({position: 'relative', top: 'auto', bottom: 'auto'});
+                    b.css({position: 'static', 'margin-top': 0, bottom: 'auto'});
                     status = 'top';
                 }
             }
 
             function setBottom(top) {
                 if ('bottom' != status) {
-                    b.css({position: 'relative', top: top + 'px', bottom: 'auto'});
+                    b.css({position: 'static', 'margin-top': top + 'px', bottom: 'auto'});
                     status = 'top';
                 }
             }
@@ -122,7 +127,7 @@
                 }
             }
 
-            if (option(sBoxHeight) > option(sBlockHeight)) {
+            if (option(sForceBind) || option(sBoxHeight) > option(sBlockHeight)) {
                 $(window).scroll(scrollEvent).resize(scrollEvent);
             }
 
