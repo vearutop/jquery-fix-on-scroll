@@ -1,4 +1,4 @@
-jquery-fixOnScroll
+jQuery().fixOnScroll
 ==================
 
 jQuery plugin for fixing elements in bounds on scroll over
