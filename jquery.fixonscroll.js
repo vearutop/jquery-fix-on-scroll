@@ -131,6 +131,8 @@
                 $(window).scroll(scrollEvent).resize(scrollEvent);
             }
 
+            scrollEvent();
+
         });
 
         return this;
