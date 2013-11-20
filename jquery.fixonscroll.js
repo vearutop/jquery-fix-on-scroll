@@ -1,6 +1,3 @@
-/**
- *
- */
 ;(function($) {
     $.fn.fixOnScroll = function(options) {
         this.each(function(){
@@ -39,11 +36,11 @@
                  * f-bottom -> top
                  */
                 if ('top' == status && 'f-top' != status) {
-                    b.css({position: 'fixed', 'margin-top': 0, top: option(sFixedTop), bottom: 'auto'});
+                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto'});
                     status = 'f-top';
                 }
                 else if ('bottom'== status && 'f-bottom' != status) {
-                    b.css({position: 'fixed', 'margin-top': 0, top: 'auto', bottom: option(sFixedBottom)});
+                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom)});
                     status = 'f-bottom';
                 }
             }
@@ -59,25 +56,31 @@
                  */
 
                 if ('top' == status && 'f-bottom' != status) {
-                    b.css({position: 'fixed', 'margin-top': 0, top: 'auto', bottom: option(sFixedBottom)});
+                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom)});
                     status = 'f-bottom';
                 }
                 else if ('bottom'== status && 'f-top' != status) {
-                    b.css({position: 'fixed', 'margin-top': 0, top: option(sFixedTop), bottom: 'auto'});
+                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto'});
                     status = 'f-top';
                 }
             }
 
+
+            var originalPosition = b.css('position'),
+                originalTop = b.css('top'),
+                originalBottom = b.css('bottom');
+
             function setTop() {
                 if ('top' != status) {
-                    b.css({position: 'static', 'margin-top': 0, bottom: 'auto'});
+                    //b.css({position: 'relative', 'top': 0, bottom: 'auto'});
+                    b.css({position: originalPosition, 'top': originalTop, bottom: originalBottom});
                     status = 'top';
                 }
             }
 
             function setBottom(top) {
                 if ('bottom' != status) {
-                    b.css({position: 'static', 'margin-top': top + 'px', bottom: 'auto'});
+                    b.css({position: 'relative', 'top': top + 'px', bottom: 'auto'});
                     status = 'top';
                 }
             }
