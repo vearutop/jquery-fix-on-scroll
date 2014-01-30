@@ -12,7 +12,9 @@
                 sFixedTop = 'fixedTop',
                 sForceBind = 'forceBind',
 
+                scrollLeft, scrollLeftPrev = 0,
                 status = 'top'; // bottom, f-top, f-bottom
+
 
             function option(key) {
                 return typeof o[key] == 'function' ? o[key]() : o[key];
@@ -43,6 +45,7 @@
                     b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom)});
                     status = 'f-bottom';
                 }
+
             }
 
 
@@ -99,6 +102,7 @@
                     boxTopPadded = oBoxTop + oBlockHeight;
 
 
+
                 if (oBoxHeight <= oBlockHeight + oFixedTop + oFixedBottom) {
                     return;
                 }
@@ -113,6 +117,7 @@
                         setBottom(oBoxHeight - oBlockHeight - oFixedTop - oFixedBottom);
                         return;
                     }
+
                     setFixedShort();
                 }
 
@@ -126,8 +131,16 @@
                         setBottom(oBoxHeight - oBlockHeight - oFixedTop - oFixedBottom);
                         return;
                     }
+
                     setFixedLong();
                 }
+
+                scrollLeft = $(window).scrollLeft();
+                if (scrollLeft != scrollLeftPrev) {
+                    b.css('left', scrollLeft);
+                    scrollLeftPrev = scrollLeft;
+                }
+
             }
 
             if (option(sForceBind) || option(sBoxHeight) > option(sBlockHeight)) {
