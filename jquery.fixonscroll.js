@@ -12,7 +12,9 @@
                 sFixedTop = 'fixedTop',
                 sForceBind = 'forceBind',
 
-                scrollLeft, scrollLeftPrev = 0,
+                scrollLeft,
+                scrollLeftPrev = 0,
+                left = b.position().left + 'px',
                 status = 'top'; // bottom, f-top, f-bottom
 
 
@@ -38,11 +40,11 @@
                  * f-bottom -> top
                  */
                 if ('top' == status && 'f-top' != status) {
-                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto'});
+                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto', left: left});
                     status = 'f-top';
                 }
                 else if ('bottom'== status && 'f-bottom' != status) {
-                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom)});
+                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom), left: left});
                     status = 'f-bottom';
                 }
 
@@ -59,11 +61,11 @@
                  */
 
                 if ('top' == status && 'f-bottom' != status) {
-                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom)});
+                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom), left: left});
                     status = 'f-bottom';
                 }
                 else if ('bottom'== status && 'f-top' != status) {
-                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto'});
+                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto', left: left});
                     status = 'f-top';
                 }
             }
@@ -71,19 +73,20 @@
 
             var originalPosition = b.css('position'),
                 originalTop = b.css('top'),
+                originalLeft = b.css('left'),
                 originalBottom = b.css('bottom');
 
             function setTop() {
                 if ('top' != status) {
                     //b.css({position: 'relative', 'top': 0, bottom: 'auto'});
-                    b.css({position: originalPosition, 'top': originalTop, bottom: originalBottom});
+                    b.css({position: originalPosition, top: originalTop, bottom: originalBottom, left:originalLeft});
                     status = 'top';
                 }
             }
 
             function setBottom(top) {
                 if ('bottom' != status) {
-                    b.css({position: 'relative', 'top': top + 'px', bottom: 'auto'});
+                    b.css({position: 'relative', 'top': top + 'px', bottom: 'auto', left: originalLeft});
                     status = 'top';
                 }
             }
