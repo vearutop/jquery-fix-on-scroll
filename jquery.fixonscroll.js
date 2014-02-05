@@ -14,7 +14,7 @@
 
                 scrollLeft,
                 scrollLeftPrev = 0,
-                left = b.position().left + 'px',
+                left,
                 status = 'top'; // bottom, f-top, f-bottom
 
 
@@ -22,13 +22,18 @@
                 return typeof o[key] == 'function' ? o[key]() : o[key];
             }
 
-            o[sBoxTop] = options[sBoxTop] || b.offset().top;
-            o[sBoxHeight] = options[sBoxHeight] || b.parent().height();
-            o[sBlockHeight] = options[sBlockHeight] || b.height() + (parseInt(b.css('marginTop')) || 0) + (parseInt(b.css('marginBottom')) || 0);
-            o[sViewPortHeight] = options[sViewPortHeight] || function(){return $(window).height();};
-            o[sFixedTop] = options[sFixedTop] || b.offset().top - option(sBoxTop);
-            o[sFixedBottom] = options[sFixedBottom] || 0;
-            o[sForceBind] = options[sForceBind] || 0;
+            function init() {
+                left = b.position().left + 'px';
+                o[sBoxTop] = options[sBoxTop] || b.offset().top;
+                o[sBoxHeight] = options[sBoxHeight] || b.parent().height();
+                o[sBlockHeight] = options[sBlockHeight] || b.height() + (parseInt(b.css('marginTop')) || 0) + (parseInt(b.css('marginBottom')) || 0);
+                o[sViewPortHeight] = options[sViewPortHeight] || function(){return $(window).height();};
+                o[sFixedTop] = options[sFixedTop] || b.offset().top - option(sBoxTop);
+                o[sFixedBottom] = options[sFixedBottom] || 0;
+                o[sForceBind] = options[sForceBind] || 0;
+            }
+
+            init();
 
 
             function setFixedShort() {
@@ -146,8 +151,14 @@
 
             }
 
+            function resizeEvent() {
+                setTop();
+                init();
+                scrollEvent();
+            }
+
             if (option(sForceBind) || option(sBoxHeight) > option(sBlockHeight)) {
-                $(window).scroll(scrollEvent).resize(scrollEvent);
+                $(window).scroll(scrollEvent).resize(resizeEvent);
             }
 
             scrollEvent();
