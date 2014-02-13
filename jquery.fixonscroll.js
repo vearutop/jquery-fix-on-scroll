@@ -15,6 +15,8 @@
                 scrollLeft,
                 scrollLeftPrev = 0,
                 left,
+                width,
+                originalStyle = b[0].style.cssText,
                 status = 'top'; // bottom, f-top, f-bottom
 
 
@@ -24,6 +26,8 @@
 
             function init() {
                 left = b.position().left + 'px';
+                width = b.width() + 'px';
+
                 o[sBoxTop] = options[sBoxTop] || b.offset().top;
                 o[sBoxHeight] = options[sBoxHeight] || b.parent().height();
                 o[sBlockHeight] = options[sBlockHeight] || b.height() + (parseInt(b.css('marginTop')) || 0) + (parseInt(b.css('marginBottom')) || 0);
@@ -45,11 +49,11 @@
                  * f-bottom -> top
                  */
                 if ('top' == status && 'f-top' != status) {
-                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto', left: left});
+                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto', left: left, width: width});
                     status = 'f-top';
                 }
                 else if ('bottom'== status && 'f-bottom' != status) {
-                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom), left: left});
+                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom), left: left, width: width});
                     status = 'f-bottom';
                 }
 
@@ -66,33 +70,37 @@
                  */
 
                 if ('top' == status && 'f-bottom' != status) {
-                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom), left: left});
+                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom), left: left, width: width});
                     status = 'f-bottom';
                 }
                 else if ('bottom'== status && 'f-top' != status) {
-                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto', left: left});
+                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto', left: left, width: width});
                     status = 'f-top';
                 }
             }
 
 
-            var originalPosition = b.css('position'),
-                originalTop = b.css('top'),
-                originalLeft = b.css('left'),
-                originalBottom = b.css('bottom');
+            /*
+             var originalPosition = b.css('position'),
+             originalTop = b.css('top'),
+             originalLeft = b.css('left'),
+             originalBottom = b.css('bottom');
+             */
 
             function setTop() {
                 if ('top' != status) {
                     //b.css({position: 'relative', 'top': 0, bottom: 'auto'});
-                    b.css({position: originalPosition, top: originalTop, bottom: originalBottom, left:originalLeft});
+                    //b.css({position: originalPosition, top: originalTop, bottom: originalBottom, left:originalLeft});
+                    b[0].style.cssText = originalStyle;
                     status = 'top';
                 }
             }
 
             function setBottom(top) {
                 if ('bottom' != status) {
-                    b.css({position: 'relative', 'top': top + 'px', bottom: 'auto', left: originalLeft});
-                    status = 'top';
+                    b[0].style.cssText = originalStyle;
+                    b.css({position: 'relative', 'top': top + 'px', bottom: 'auto', width: width});
+                    status = 'bottom';
                 }
             }
 
