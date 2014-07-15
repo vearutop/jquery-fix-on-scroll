@@ -25,7 +25,7 @@
             }
 
             function init() {
-                left = b.position().left + 'px';
+                left = b.position().left;
                 width = b.width() + 'px';
 
                 o[sBoxTop] = options[sBoxTop] || b.offset().top;
@@ -69,12 +69,14 @@
                  * f-top -> top
                  */
 
+                var l = (left - $(window).scrollLeft()) + 'px';
+
                 if ('top' == status && 'f-bottom' != status) {
-                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom), left: left, width: width});
+                    b.css({position: 'fixed', top: 'auto', bottom: option(sFixedBottom), left: l, width: width});
                     status = 'f-bottom';
                 }
                 else if ('bottom'== status && 'f-top' != status) {
-                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto', left: left, width: width});
+                    b.css({position: 'fixed', top: option(sFixedTop), bottom: 'auto', left: l, width: width});
                     status = 'f-top';
                 }
             }
@@ -153,7 +155,7 @@
 
                 scrollLeft = $(window).scrollLeft();
                 if (scrollLeft != scrollLeftPrev) {
-                    b.css('left', scrollLeft);
+                    b.css('left', left - scrollLeft);
                     scrollLeftPrev = scrollLeft;
                 }
 
